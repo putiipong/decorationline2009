@@ -15,25 +15,25 @@ const AboutUsSection = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           viewport={{ once: true, amount: 0.2 }} // Triggers when 20% of section is visible
         >
-          <h3 className="text-lg font-bold uppercase mb-4">
+          <h3 className="text-lg font-bold uppercase mb-4 text-black">
             About Our Company
           </h3>
-          <p className="text-md leading-relaxed mb-4">
+          <p className="text-md leading-relaxed mb-4 text-black">
             Decoration Line 2009 is a trusted contractor specializing in
             high-quality building and renovation services. With years of
             experience, we have successfully completed numerous residential and
             commercial projects, ensuring durability, functionality, and
             aesthetic appeal.
           </p>
-          <h2 className="text-lg font-bold uppercase mb-4">Our Services</h2>
-          <ul className="list-disc list-inside space-y-2 text-md mb-4">
+          <h2 className="text-lg font-bold uppercase mb-4 text-black">Our Services</h2>
+          <ul className="list-disc list-inside space-y-2 text-md mb-4 text-black">
             <li>Building and home renovation</li>
             <li>Residential and commercial construction</li>
             <li>Interior and exterior design</li>
             <li>General maintenance and repair</li>
           </ul>
-          <h2 className="text-lg font-bold uppercase mb-4">Why Choose Us?</h2>
-          <p className="text-md leading-relaxed mb-4">
+          <h2 className="text-lg font-bold uppercase mb-4 text-black">Why Choose Us?</h2>
+          <p className="text-md leading-relaxed mb-4 text-black">
             We prioritize quality, professionalism, and customer satisfaction.
             Our team consists of skilled professionals dedicated to turning your
             vision into reality with precision and care.
