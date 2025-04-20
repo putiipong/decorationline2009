@@ -1,13 +1,21 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const Navbar = () => {
   const [scrolling, setScrolling] = useState(false);
   const pathname = usePathname();
+  const router= useRouter()
   const isHomePage = pathname === "/";
-  // Detect scroll position and toggle the "scrolling" state
+
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -23,7 +31,7 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  console.log("isHomePage", isHomePage);
+
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
@@ -45,28 +53,19 @@ const Navbar = () => {
 </Link>
         {/* Navigation Links */}
         <nav className="hidden md:flex gap-8">
-          <a
-            href="#services"
-            className="text-white hover:text-gray-300 transition"
-          >
-            SERVICES
-          </a>
-          <a
-            href="#projects"
-            className="text-white hover:text-gray-300 transition"
-          >
-            PROJECTS
-          </a>
-          <a
-            href="#about"
-            className="text-white hover:text-gray-300 transition"
-          >
-            ABOUT US
-          </a>
+          <Link href="/about" className="hover:text-gray-300 transition">
+          ABOUT US
+          </Link>
+          <Link href="/projects" className="hover:text-gray-300 transition">
+          PROJECTS
+          </Link>
+          {/* <Link href="/projects" className="hover:text-gray-300 transition">
+          SERVICES
+          </Link> */}
         </nav>
 
         {/* CTA Button */}
-        <button className="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-md text-black font-semibold">
+        <button onClick={()=>router.push('/contact')} className="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-md text-black font-semibold">
           Contact
         </button>
       </div>

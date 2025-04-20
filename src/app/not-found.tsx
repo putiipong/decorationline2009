@@ -8,7 +8,6 @@ const Custom404 = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-black text-white">
       <div className="text-center">
-        {/* Typing animation for 404 Text */}
         <motion.h1
           className="text-6xl font-bold mb-6"
           initial={{ opacity: 0 }}
@@ -26,7 +25,6 @@ const Custom404 = () => {
           </motion.span>
         </motion.h1>
 
-        {/* Button to Home */}
         <Link
           href="/"
           className="px-6 py-3 bg-yellow-600 hover:bg-yellow-500 text-white rounded-lg  transition"

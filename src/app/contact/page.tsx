@@ -32,7 +32,7 @@ const Contact = () => {
           {/* Line */}
           <div className="flex items-center justify-center space-x-2">
             <ChatBubbleLeftRightIcon className="text-yellow-600 h-6 w-6" />
-            <p>@530alyhn</p>
+            <p>Line: @530alyhn</p>
           </div>
 
           {/* Address */}

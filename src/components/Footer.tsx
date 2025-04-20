@@ -6,7 +6,6 @@ import { useEffect } from "react";
 
 const Footer = () => {
   useEffect(() => {
-    // Dynamically load the Line plugin script
     const script = document.createElement("script");
     script.src =
       "https://www.line-website.com/social-plugins/js/thirdparty/loader.min.js";
@@ -15,7 +14,6 @@ const Footer = () => {
     document.body.appendChild(script);
 
     return () => {
-      // Cleanup script if component unmounts
       document.body.removeChild(script);
     };
   }, []);
@@ -28,7 +26,6 @@ const Footer = () => {
       viewport={{ once: true, amount: 0.2 }}
     >
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-        {/* Left Section - Logo & Copyright */}
         <div className="mb-6 md:mb-0 text-center md:text-left">
           <div className="flex items-center">
             {/* <div className="w-8 h-8">

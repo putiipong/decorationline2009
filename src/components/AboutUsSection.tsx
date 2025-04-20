@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const AboutUsSection = () => {
   return (
-    <section className="bg-[#f9f8e8] py-12 px-6 md:px-16">
+    <section id="about" className="bg-[#f9f8e8] py-12 px-6 md:px-16">
       <div className="container mx-auto flex flex-col md:flex-row items-center">
         {/* Text Section */}
         <motion.div
