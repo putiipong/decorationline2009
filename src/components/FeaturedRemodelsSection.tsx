@@ -1,17 +1,31 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const carouselImages = [
-  { id: 1, src: "/building.jpg", alt: "Modern kitchen design" },
-  { id: 2, src: "/building.jpg", alt: "Luxurious living room" },
-  { id: 3, src: "/building.jpg", alt: "Minimalist office design" },
+  {
+    id: 1,
+    src: "https://drive.google.com/uc?export=view&id=13WMf1AfnvYK7GuoArrVZ1i5gvEWgiOc9",
+    alt: "Modern kitchen design",
+  },
+  {
+    id: 2,
+    src: "https://drive.google.com/uc?export=view&id=1EH9Zl3UNFIWzj1t-hBobBZOFgvBVbtYe",
+    alt: "Luxurious living room",
+  },
+  {
+    id: 3,
+    src: "https://drive.google.com/uc?export=view&id=1iWWSBl83VSS2GgEzun96j-EbgXBoDGYY",
+    alt: "Minimalist office design",
+  },
 ];
 
 const FeaturedRemodelsSection = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
-
+  const router = useRouter();
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setSelectedIndex(emblaApi.selectedScrollSnap());
@@ -23,7 +37,7 @@ const FeaturedRemodelsSection = () => {
   }, [emblaApi, onSelect]);
 
   return (
-    <section className="bg-[#f1ecd7] py-12 px-6 md:px-16">
+    <section className="bg-primary py-12 px-6 md:px-16">
       <div className="container mx-auto flex flex-col items-center">
         {/* Text Section */}
         <motion.div
@@ -32,11 +46,16 @@ const FeaturedRemodelsSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <h3 className="text-sm font-bold uppercase mb-4 text-black">Featured Remodels</h3>
+          <h3 className="text-sm font-bold uppercase mb-4 text-black">
+            Featured Remodels
+          </h3>
           <h2 className="text-3xl font-light mb-6 leading-snug text-black">
             We Create Spaces You’ll Love
           </h2>
-          <button className="inline-flex items-center px-6 py-3 rounded-md bg-black text-white hover:bg-gray-800">
+          <button
+            onClick={() => router.push("/projects")}
+            className="inline-flex items-center px-6 py-3 rounded-md bg-primary text-secondary text-xl font-semibold hover:font-extrabold"
+          >
             All Projects <span className="ml-2">→</span>
           </button>
         </motion.div>
@@ -56,10 +75,12 @@ const FeaturedRemodelsSection = () => {
                   className="relative min-w-[80%] md:min-w-[50%] p-4"
                 >
                   <div className="group overflow-hidden rounded-lg shadow-lg">
-                    <img
+                    <Image
                       src={image.src}
                       alt={image.alt}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      width={800}
+                      height={600}
+                      className="cursor-pointer max-h-[600] object-cover transition-transform duration-500 group-hover:scale-105 md:max-h-[600] sm:max-h-[400]"
                     />
                   </div>
                 </div>

@@ -13,7 +13,7 @@ const LandingPage = () => {
       ></iframe>
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+      <div className="absolute inset-0 transition bg-opacity-50"></div>
 
       {/* Text Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4">

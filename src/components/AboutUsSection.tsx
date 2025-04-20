@@ -5,11 +5,11 @@ import { motion } from "framer-motion";
 
 const AboutUsSection = () => {
   return (
-    <section id="about" className="bg-[#f9f8e8] py-12 px-6 md:px-16">
+    <section id="about" className="bg-primary py-12 px-6 md:px-16">
       <div className="container mx-auto flex flex-col md:flex-row items-center">
         {/* Text Section */}
         <motion.div
-          className="md:w-1/2 text-center md:text-left mb-8 md:mb-0"
+          className="md:w-1/2 text-center md:text-left mb-8 md:mb-0 mr-2"
           initial={{ opacity: 0, x: -50 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
