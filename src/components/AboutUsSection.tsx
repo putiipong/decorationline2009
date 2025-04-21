@@ -76,8 +76,8 @@ const AboutUsSection = () => {
         >
           <div className="rounded-lg overflow-hidden shadow-lg">
             <Image
-              src={"/building.jpg"}
-              alt="Modern building"
+              src={"/about-us.webp"}
+              alt="about us"
               layout="responsive"
               width={800}
               height={600}

@@ -80,7 +80,7 @@ const FeaturedRemodelsSection = () => {
                       alt={image.alt}
                       width={800}
                       height={600}
-                      className="cursor-pointer max-h-[600] object-cover transition-transform duration-500 group-hover:scale-105 md:max-h-[600] sm:max-h-[400]"
+                      className="cursor-pointer max-h-[400] object-cover transition-transform duration-500 group-hover:scale-105 md:max-h-[600] sm:max-h-[400]"
                     />
                   </div>
                 </div>
