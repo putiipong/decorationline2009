@@ -74,13 +74,22 @@ const FeaturedRemodelsSection = () => {
                   key={image.id}
                   className="relative min-w-[80%] md:min-w-[50%] p-4"
                 >
-                  <div className="group overflow-hidden rounded-lg shadow-lg">
+                  {/* <div className="group overflow-hidden rounded-lg shadow-lg max-h-full">
                     <Image
                       src={image.src}
                       alt={image.alt}
                       width={800}
                       height={600}
-                      className="cursor-pointer max-h-[400] object-cover transition-transform duration-500 group-hover:scale-105 md:max-h-[600] sm:max-h-[400]"
+                      className="cursor-pointer max-h-[600] object-cover transition-transform duration-500 group-hover:scale-105 sm:max-h-[400]"
+                    />
+                  </div> */}
+                  <div className="group overflow-hidden rounded-lg shadow-lg w-full max-w-[800px] mx-auto">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={800}
+                      height={600}
+                      className="cursor-pointer w-full h-[600px] object-cover transition-transform duration-500 group-hover:scale-105 sm:h-[400px]"
                     />
                   </div>
                 </div>
