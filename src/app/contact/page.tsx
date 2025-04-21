@@ -42,6 +42,7 @@ const Contact = () => {
               339/51 ถนน บางกรวย-ไทรน้อย ต.บางรักพัฒนา อ.บางบัวทอง จ.นนทบุรี
               11110
             </p>
+            <h1 className="font-sans text-4xl">Hello from Domaine Sans</h1>
           </div>
         </div>
       </div>

@@ -15,6 +15,9 @@ export default {
         primary: "#ffffff",
         secondary: "#000000",
       },
+      fontFamily: {
+        sans: ['"Domaine Sans"', 'Arial', 'Helvetica', 'sans-serif'],
+      },
     },
   },
   plugins: [],

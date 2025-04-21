@@ -31,7 +31,7 @@ const Navbar = () => {
           ? "bg-opacity-90 shadow backdrop-blur-lg text-secondary"
           : `${
               isHomePage
-                ? "bg-transparent"
+                ? "bg-transparent text-primary"
                 : "shadow backdrop-blur-lg text-secondary"
             }`
       }`}
@@ -39,24 +39,23 @@ const Navbar = () => {
       <div className="container mx-auto px-6 py-4 flex justify-between items-center transition duration-500">
         {/* Logo */}
         <Link href="/">
-          <h1 className={`text-lg font-semibold cursor-pointer transition`}>
+          <h1 className={`text-lg font-bold cursor-pointer transition`}>
             DECOLATION LINE 2009
           </h1>
         </Link>
         {/* Navigation Links */}
         <nav className="hidden md:flex gap-8">
-          <Link href="/about" className="text-sm hover:text-gray-300 transition">
+          <Link href="/about" className="text-xs font-semibold hover:text-gray-300 transition">
             ABOUT US
           </Link>
-          <Link href="/projects" className="text-sm hover:text-gray-300 transition">
+          <Link href="/projects" className="text-xs font-semibold hover:text-gray-300 transition">
             PROJECTS
-          </Link>
-          
-          {/* <Link href="/projects" className="hover:text-gray-300 transition">
+          </Link> 
+          <Link href="/services" className="text-xs font-semibold hover:text-gray-300 transition">
           SERVICES
-          </Link> */}
+          </Link>
         </nav>
-        <Link href="/contact" className="text-sm hover:text-gray-300 transition">
+        <Link href="/contact" className="text-xs font-semibold hover:text-gray-300 transition">
           CONTACT
           </Link>
         {/* CTA Button */}

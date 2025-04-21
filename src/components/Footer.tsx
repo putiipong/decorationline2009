@@ -35,13 +35,16 @@ const Footer = () => {
 
           {/* Center Section - Navigation Links */}
           <div className="flex space-x-6 text-sm">
-            <Link href="/about" className="hover:text-gray-300 transition">
+            <Link href="/about" className="font-semibold hover:text-gray-300 transition">
               ABOUT US
             </Link>
-            <Link href="/projects" className="hover:text-gray-300 transition">
+            <Link href="/projects" className="font-semibold hover:text-gray-300 transition">
               PROJECTS
             </Link>
-            <Link href="/contact" className="hover:text-gray-300 transition">
+            <Link href="/services" className="font-semibold hover:text-gray-300 transition">
+              SERVICES
+            </Link>
+            <Link href="/contact" className="font-semibold hover:text-gray-300 transition">
               CONTACT
             </Link>
           </div>
