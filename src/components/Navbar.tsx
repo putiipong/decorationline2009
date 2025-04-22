@@ -1,7 +1,89 @@
 "use client";
+// import { usePathname } from "next/navigation";
+// import { useState, useEffect } from "react";
+// import Link from "next/link";
+
+// const Navbar = () => {
+//   const [scrolling, setScrolling] = useState(false);
+//   const pathname = usePathname();
+//   const isHomePage = pathname === "/";
+
+//   useEffect(() => {
+//     const handleScroll = () => {
+//       if (window.scrollY > 50) {
+//         setScrolling(true);
+//       } else {
+//         setScrolling(false);
+//       }
+//     };
+
+//     window.addEventListener("scroll", handleScroll);
+
+//     return () => {
+//       window.removeEventListener("scroll", handleScroll);
+//     };
+//   }, []);
+
+//   return (
+//     <header
+//       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-primary ${
+//         scrolling
+//           ? "bg-opacity-90 shadow backdrop-blur-lg text-secondary"
+//           : `${
+//               isHomePage
+//                 ? "bg-transparent text-primary"
+//                 : "shadow backdrop-blur-lg text-secondary"
+//             }`
+//       }`}
+//     >
+//       <div className="container mx-auto px-6 py-4 flex justify-between items-center transition duration-500">
+//         {/* Logo */}
+//         <Link href="/">
+//           <h1 className={`text-lg font-bold cursor-pointer transition`}>
+//             DECOLATION LINE 2009
+//           </h1>
+//         </Link>
+//         {/* Navigation Links */}
+//         <nav className="hidden md:flex gap-8">
+//           <Link href="/about" className="text-xs font-semibold hover:text-gray-300 transition">
+//             ABOUT US
+//           </Link>
+//           <Link href="/projects" className="text-xs font-semibold hover:text-gray-300 transition">
+//             PROJECTS
+//           </Link>
+//           <Link href="/services" className="text-xs font-semibold hover:text-gray-300 transition">
+//           SERVICES
+//           </Link>
+//         </nav>
+//         <Link href="/contact" className="text-xs font-semibold hover:text-gray-300 transition">
+//           CONTACT
+//           </Link>
+//         {/* CTA Button */}
+//         {/* <button
+//           onClick={() => router.push("/contact")}
+//           className="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-md text-black font-semibold"
+//         >
+//           Contact
+//         </button> */}
+//       </div>
+//     </header>
+//   );
+// };
+
+// export default Navbar;
+
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { Disclosure } from "@headlessui/react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+
+const navigation = [
+  { name: "ABOUT US", href: "/about" },
+  { name: "PROJECTS", href: "/projects" },
+  { name: "SERVICES", href: "/services" },
+  { name: "CONTACT", href: "/contact" },
+];
 
 const Navbar = () => {
   const [scrolling, setScrolling] = useState(false);
@@ -10,63 +92,84 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolling(true);
-      } else {
-        setScrolling(false);
-      }
+      setScrolling(window.scrollY > 50);
     };
-
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
-    <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 bg-primary ${
+    <Disclosure
+      as="header"
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
         scrolling
-          ? "bg-opacity-90 shadow backdrop-blur-lg text-secondary"
-          : `${
-              isHomePage
-                ? "bg-transparent text-primary"
-                : "shadow backdrop-blur-lg text-secondary"
-            }`
+          ? "bg-white/90 shadow backdrop-blur text-secondary"
+          : isHomePage
+          ? "bg-transparent text-primary"
+          : "bg-white shadow backdrop-blur text-secondary"
       }`}
     >
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center transition duration-500">
-        {/* Logo */}
-        <Link href="/">
-          <h1 className={`text-lg font-bold cursor-pointer transition`}>
-            DECOLATION LINE 2009
-          </h1>
-        </Link>
-        {/* Navigation Links */}
-        <nav className="hidden md:flex gap-8">
-          <Link href="/about" className="text-xs font-semibold hover:text-gray-300 transition">
-            ABOUT US
-          </Link>
-          <Link href="/projects" className="text-xs font-semibold hover:text-gray-300 transition">
-            PROJECTS
-          </Link> 
-          <Link href="/services" className="text-xs font-semibold hover:text-gray-300 transition">
-          SERVICES
-          </Link>
-        </nav>
-        <Link href="/contact" className="text-xs font-semibold hover:text-gray-300 transition">
-          CONTACT
-          </Link>
-        {/* CTA Button */}
-        {/* <button
-          onClick={() => router.push("/contact")}
-          className="bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded-md text-black font-semibold"
-        >
-          Contact
-        </button> */}
-      </div>
-    </header>
+      {({ open }) => (
+        <>
+          <div className="mx-auto container px-6 py-4 flex justify-between items-center">
+            {/* Logo */}
+            <Link href="/">
+              <h1 className="text-lg font-bold">DECOLATION LINE 2009</h1>
+            </Link>
+
+            {/* Desktop menu */}
+            <nav className="hidden md:flex gap-8">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-xs font-semibold hover:text-gray-400 transition"
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Mobile hamburger */}
+            <div className="md:hidden">
+              <Disclosure.Button className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary">
+                {open ? (
+                  <XMarkIcon className="h-6 w-6" />
+                ) : (
+                  <Bars3Icon className="h-6 w-6" />
+                )}
+              </Disclosure.Button>
+            </div>
+          </div>
+
+          {/* Mobile menu panel */}
+          <Disclosure.Panel
+            className={`md:hidden px-6 pb-4 pt-2 transition-all duration-500${
+              scrolling
+                ? "bg-white/90 shadow backdrop-blur text-secondary"
+                : isHomePage
+                ? "bg-transparent text-primary"
+                : "bg-white shadow backdrop-blur text-secondary"
+            }`}
+          >
+            {({ close }) => (
+              <div className="flex flex-col space-y-2">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="text-sm font-medium hover:text-primary transition"
+                    onClick={()=>close()}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </Disclosure.Panel>
+        </>
+      )}
+    </Disclosure>
   );
 };
 
