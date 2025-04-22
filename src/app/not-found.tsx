@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 const Custom404 = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black text-white">
+    <div className="flex items-center justify-center min-h-screen bg-primary text-secondary">
       <div className="text-center">
         <motion.h1
           className="text-6xl font-bold mb-6"
@@ -27,7 +27,7 @@ const Custom404 = () => {
 
         <Link
           href="/"
-          className="px-6 py-3 bg-yellow-600 hover:bg-yellow-500 text-white rounded-lg  transition"
+          className="px-6 py-3 bg-primary hover:bg-secondary hover:text-white rounded-lg mt-6 transition"
         >
           Go to Home
         </Link>

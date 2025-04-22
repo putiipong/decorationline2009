@@ -3,6 +3,13 @@
 import Link from "next/link";
 import { useEffect } from "react";
 
+const navigation = [
+  { name: "ABOUT US", href: "/about" },
+  { name: "PROJECTS", href: "/projects" },
+  { name: "SERVICES", href: "/services" },
+  { name: "CONTACT US", href: "/contact" },
+];
+
 const Footer = () => {
   useEffect(() => {
     const script = document.createElement("script");
@@ -16,72 +23,62 @@ const Footer = () => {
       document.body.removeChild(script);
     };
   }, []);
+
   return (
-    // <motion.footer
-    //   className="bg-primary text-secondary py-10 px-6 md:px-16"
-    //   initial={{ opacity: 0, y: 50 }}
-    //   whileInView={{ opacity: 1, y: 0 }}
-    //   transition={{ duration: 0.8, ease: "easeOut" }}
-    //   viewport={{ once: true, amount: 0.2 }}
-    // >
-    <>
-      <footer className="bg-primary text-secondary py-10 px-6 md:px-16">
-        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-6 md:mb-0 text-center md:text-left">
-            <div className="flex items-center">
-              <h2 className="text-xl font-bold">DECOLATION LINE 2009</h2>
-            </div>
-          </div>
-
-          {/* Center Section - Navigation Links */}
-          <div className="flex space-x-6 text-sm">
-            <Link href="/about" className="font-semibold hover:text-gray-300 transition">
-              ABOUT US
-            </Link>
-            <Link href="/projects" className="font-semibold hover:text-gray-300 transition">
-              PROJECTS
-            </Link>
-            <Link href="/services" className="font-semibold hover:text-gray-300 transition">
-              SERVICES
-            </Link>
-            <Link href="/contact" className="font-semibold hover:text-gray-300 transition">
-              CONTACT
-            </Link>
-          </div>
-
-          {/* Right Section - Social Media */}
-          <div className="flex space-x-4 mt-6 md:mt-0">
-            <div
-              className="line-it-button"
-              data-lang="en"
-              data-type="friend"
-              data-env="REAL"
-              data-lineid="@lineteamjp"
-              style={{ display: "none" }}
-            />
-          </div>
+    <footer className="bg-primary text-secondary py-12 px-6 md:px-16">
+      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0">
+        <div className="text-center md:text-left">
+          <h2 className="text-2xl font-bold text-secondary">
+            DECOLATION LINE 2009
+          </h2>
+          <p className="text-sm text-gray-400 mt-2">
+            Providing exceptional construction services since 2009.
+          </p>
         </div>
 
-        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-6 md:mb-0 text-center md:text-left">
-            <div className="mt-5">
-              <h2 className="text-md font-semibold">HEAD OFFICE</h2>
-              <p>339/51 Bangbuathong Bangrakpattana</p>
-              <p>Nonthaburi 11110</p>
-            </div>
-          </div>
+        <div className="flex space-x-6 justify-center md:justify-start text-sm">
+          {navigation.map((n, i) => (
+            <Link
+              key={i}
+              href={n.href}
+              className="font-semibold text-secondary hover:text-gray-300 transition"
+            >
+              {n.name}
+            </Link>
+          ))}
         </div>
 
-      </footer>
-      <hr />
-      <div className="bg-primary p-1 px-6 md:px-16">
-        <p className="text-gray-400 text-sm mt-2">
+        <div className="flex justify-center md:justify-start mt-4 md:mt-0">
+          <div
+            className="line-it-button"
+            data-lang="en"
+            data-type="friend"
+            data-env="REAL"
+            data-lineid="@lineteamjp"
+            style={{ display: "none" }}
+          />
+        </div>
+      </div>
+
+      <div className="container mx-auto mt-10 flex flex-col md:flex-row justify-between items-center">
+        <div className="text-center md:text-left">
+          <h2 className="text-md font-semibold text-white">HEAD OFFICE</h2>
+          <p className="text-sm text-gray-400 mt-2">
+            339/51 Bangbuathong Bangrakpattana
+          </p>
+          <p className="text-sm text-gray-400">Nonthaburi 11110</p>
+        </div>
+      </div>
+
+      <hr className="border-gray-700 my-6" />
+
+      <div className="bg-primary text-center">
+        <p className="text-sm text-gray-400">
           © DECOLATION LINE 2009 | {new Date().getFullYear()} All rights
           reserved.
         </p>
       </div>
-    </>
-    // </motion.footer>
+    </footer>
   );
 };
 
