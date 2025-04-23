@@ -13,6 +13,7 @@ const projects = [
     imageUrl:
       "https://drive.google.com/uc?export=view&id=1tUIGES-w2zpaIx_7k0-0jiwYhxzGKWMX",
     route: "wind_condo",
+    category:'construction'
   },
   {
     id: 2,
@@ -21,6 +22,7 @@ const projects = [
     imageUrl:
       "https://drive.google.com/uc?export=view&id=17psKVVZR3IJ7pg1tdVCJ08p-l_ryFRc0",
     route: "panana_phutthamonthon_sai_3",
+    category:'construction'
   },
   {
     id: 3,
@@ -29,6 +31,7 @@ const projects = [
     imageUrl:
       "https://drive.google.com/uc?export=view&id=1DaCWL2pEhYdALMJBPCsAvOg68EvqvlCQ",
     route: "jian_cha_g_tower",
+    category:'construction'
   },
   {
     id: 4,
@@ -37,6 +40,7 @@ const projects = [
     imageUrl:
       "https://drive.google.com/uc?export=view&id=1DaCWL2pEhYdALMJBPCsAvOg68EvqvlCQ",
     route: "jian_cha_icon_siam",
+    category:'construction'
   },
   {
     id: 5,
@@ -45,6 +49,7 @@ const projects = [
     imageUrl:
       "https://drive.google.com/uc?export=view&id=1DaCWL2pEhYdALMJBPCsAvOg68EvqvlCQ",
     route: "jian_cha_the_up_rama3",
+    category:'construction'
   },
   {
     id: 6,
@@ -53,6 +58,7 @@ const projects = [
     imageUrl:
       "https://drive.google.com/uc?export=view&id=1Tmlr1pYYCk5iG8aq-QSpDDI7U5lqcj4N",
     route: "grandio_bangna_km5",
+    category:'construction'
   },
   {
     id: 7,
@@ -61,6 +67,7 @@ const projects = [
     imageUrl:
       "https://drive.google.com/uc?export=view&id=1InuD1WSSf_eWNBUk_aO9VHLUozqlCMOK",
     route: "boulevard_signature_westgate",
+    category:'construction'
   },
   {
     id: 8,
@@ -69,6 +76,7 @@ const projects = [
     imageUrl:
       "https://drive.google.com/uc?export=view&id=1Nz9-VydgvzQnrQodHfbnrgFIV5s-mTc9",
     route: "boulevard_rama5",
+    category:'construction'
   },
   {
     id: 9,
@@ -77,6 +85,7 @@ const projects = [
     imageUrl:
       "https://drive.google.com/uc?export=view&id=1NCwfPifbQQPSeBpx_xiBsyePrUMAJjbN",
     route: "swensen's",
+    category:'construction'
   },
   {
     id: 10,
@@ -85,6 +94,16 @@ const projects = [
     imageUrl:
       "https://drive.google.com/uc?export=view&id=1WNjkxbszArMIaj49qcsPcrGNM4BlYeae",
     route: "laoyuan",
+    category:'construction'
+  },
+  {
+    id: 11,
+    title: "EXTERIOR",
+    description: "",
+    imageUrl:
+      "https://drive.google.com/uc?export=view&id=1HP38Gq31JAIugAE-1cxDbbxPJToEkezU",
+    route: "exterior",
+    category:'exterior'
   },
 ];
 

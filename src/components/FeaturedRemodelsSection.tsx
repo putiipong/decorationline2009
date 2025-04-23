@@ -3,7 +3,12 @@ import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-
+import { getDriveImages } from "@/app/projects/[slug]/page";
+type DriveFile = {
+  id: string;
+  name: string;
+  mimeType: string;
+};
 const carouselImages = [
   {
     id: 1,
@@ -21,10 +26,16 @@ const carouselImages = [
     alt: "Minimalist office design",
   },
 ];
-
+// https://drive.google.com/drive/folders/1uRpQDbZy_9v66WgB0PIZ74b57x0qoOva?usp=drive_link
 const FeaturedRemodelsSection = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [carouselImages, setCarouselImages] = useState<DriveFile[]>([]);
+
+  const fetchImages = async () => {
+    const images = await getDriveImages("1uRpQDbZy_9v66WgB0PIZ74b57x0qoOva");
+    setCarouselImages(images);
+  };
   const router = useRouter();
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -32,6 +43,7 @@ const FeaturedRemodelsSection = () => {
   }, [emblaApi]);
 
   useEffect(() => {
+    fetchImages();
     if (!emblaApi) return;
     emblaApi.on("select", onSelect);
   }, [emblaApi, onSelect]);
@@ -76,8 +88,8 @@ const FeaturedRemodelsSection = () => {
                 >
                   <div className="group overflow-hidden rounded-lg shadow-lg w-full max-w-[800px] mx-auto">
                     <Image
-                      src={image.src}
-                      alt={image.alt}
+                      src={`https://drive.google.com/uc?export=view&id=${image.id}`}
+                      alt={image.name}
                       width={800}
                       height={600}
                       className="cursor-pointer w-full h-[600px] object-cover transition-transform duration-500 group-hover:scale-105 sm:h-[400px]"

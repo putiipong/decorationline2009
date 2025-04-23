@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     defaultLocale: "en",
   },
   images: {
-    domains: ['drive.google.com'],
+    domains: ['drive.google.com','images.pexels.com','images.unsplash.com'],
   },
   /* config options here */
 };

@@ -24,9 +24,10 @@ const FOLDER_IDS: Record<string, string> = {
   boulevard_rama5: "1efTN7U60f4vbZ3x4N6OHcOhBIpfLkCAc",
   ["swensen's"]: "1ObBwLMn8Sl82XOZuIpWlp4abuKQ16lRs",
   laoyuan: "17-chOFjAGp_Sw9ly5MA8Q3fpPztWhIyM",
+  exterior: "13WupRmUCq0x_bk5r3UHo_I5zUWaVXl9_",
 };
 
-async function getDriveImages(folderId: string): Promise<DriveFile[]> {
+export async function getDriveImages(folderId: string): Promise<DriveFile[]> {
   const res = await fetch(
     `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType+contains+'image/'&key=${GOOGLE_API_KEY}`
   );
