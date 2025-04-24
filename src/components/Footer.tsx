@@ -54,7 +54,7 @@ const Footer = () => {
             data-lang="en"
             data-type="friend"
             data-env="REAL"
-            data-lineid="@lineteamjp"
+            data-lineid="@530alyhn"
             style={{ display: "none" }}
           />
         </div>

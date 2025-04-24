@@ -9,23 +9,23 @@ type DriveFile = {
   name: string;
   mimeType: string;
 };
-const carouselImages = [
-  {
-    id: 1,
-    src: "https://drive.google.com/uc?export=view&id=13WMf1AfnvYK7GuoArrVZ1i5gvEWgiOc9",
-    alt: "Modern kitchen design",
-  },
-  {
-    id: 2,
-    src: "https://drive.google.com/uc?export=view&id=1EH9Zl3UNFIWzj1t-hBobBZOFgvBVbtYe",
-    alt: "Luxurious living room",
-  },
-  {
-    id: 3,
-    src: "https://drive.google.com/uc?export=view&id=1iWWSBl83VSS2GgEzun96j-EbgXBoDGYY",
-    alt: "Minimalist office design",
-  },
-];
+// const carouselImages = [
+//   {
+//     id: 1,
+//     src: "https://drive.google.com/uc?export=view&id=13WMf1AfnvYK7GuoArrVZ1i5gvEWgiOc9",
+//     alt: "Modern kitchen design",
+//   },
+//   {
+//     id: 2,
+//     src: "https://drive.google.com/uc?export=view&id=1EH9Zl3UNFIWzj1t-hBobBZOFgvBVbtYe",
+//     alt: "Luxurious living room",
+//   },
+//   {
+//     id: 3,
+//     src: "https://drive.google.com/uc?export=view&id=1iWWSBl83VSS2GgEzun96j-EbgXBoDGYY",
+//     alt: "Minimalist office design",
+//   },
+// ];
 // https://drive.google.com/drive/folders/1uRpQDbZy_9v66WgB0PIZ74b57x0qoOva?usp=drive_link
 const FeaturedRemodelsSection = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
