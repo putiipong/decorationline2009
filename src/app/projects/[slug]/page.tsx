@@ -27,7 +27,7 @@ const FOLDER_IDS: Record<string, string> = {
   exterior: "13WupRmUCq0x_bk5r3UHo_I5zUWaVXl9_",
 };
 
-export async function getDriveImages(folderId: string): Promise<DriveFile[]> {
+async function getDriveImages(folderId: string): Promise<DriveFile[]> {
   const res = await fetch(
     `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType+contains+'image/'&key=${GOOGLE_API_KEY}`
   );

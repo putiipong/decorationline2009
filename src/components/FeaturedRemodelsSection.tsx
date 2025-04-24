@@ -3,7 +3,9 @@ import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { getDriveImages } from "@/app/projects/[slug]/page";
+
+const GOOGLE_API_KEY = "AIzaSyBq02DtbNkR-Gso28kVaaN020pRrg2pPIs";
+
 type DriveFile = {
   id: string;
   name: string;
@@ -27,6 +29,20 @@ type DriveFile = {
 //   },
 // ];
 // https://drive.google.com/drive/folders/1uRpQDbZy_9v66WgB0PIZ74b57x0qoOva?usp=drive_link
+async function getDriveImages(folderId: string): Promise<DriveFile[]> {
+  const res = await fetch(
+    `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+mimeType+contains+'image/'&key=${GOOGLE_API_KEY}`
+  );
+
+  if (!res.ok) {
+    console.error("Error fetching from Google Drive:", await res.text());
+    return [];
+  }
+
+  const data = await res.json();
+  return data.files || [];
+}
+
 const FeaturedRemodelsSection = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
