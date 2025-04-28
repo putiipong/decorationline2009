@@ -117,7 +117,7 @@ const services = [
     description:
       "Tailored renovation and custom building solutions to upgrade your current space.",
     image:
-      "https://images.unsplash.com/photo-1589927986089-35812388d1ef?auto=format&fit=crop&w=800&q=80",
+      "https://drive.google.com/uc?export=view&id=13WMf1AfnvYK7GuoArrVZ1i5gvEWgiOc9",
   },
   {
     title: "Turnkey Project",
