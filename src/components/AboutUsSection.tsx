@@ -124,7 +124,7 @@ const AboutUsSection = () => {
             <Image
               src="/about-us.webp"
               alt="Team working on a renovation project"
-              layout="responsive"
+              // layout="responsive"
               width={800}
               height={600}
               priority
