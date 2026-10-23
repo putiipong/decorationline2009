@@ -18,7 +18,7 @@ async function convertToWebp(bytes: Buffer) {
     .webp({ quality: 80, effort: 3 }).toBuffer());
 }
 
-async function fromPrivateThumbnail(thumbnailLink: string): Promise<Uint8Array> {
+async function fromPrivateThumbnail(thumbnailLink: string): Promise<Uint8Array<ArrayBuffer>> {
   const url = new URL(thumbnailLink);
   const host = url.hostname.toLowerCase();
   if (!['googleusercontent.com', 'googleapis.com', 'google.com']
