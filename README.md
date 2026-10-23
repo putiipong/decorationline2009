@@ -1,120 +1,68 @@
-# Decoration Line 2009 — Next.js + Google Drive Auto Gallery
+# Decoration Line 2009 — Next.js V4 (Google Drive Complete Gallery)
 
-เวอร์ชัน 3.0 ของเว็บผลงาน **หจก. เดคคอร์เรชั่น ไลน์ 2009** พัฒนาด้วย Next.js 16 App Router + React 19 + TypeScript เพื่อ Deploy บน Vercel
+เว็บ Next.js 16 + React 19 + TypeScript สำหรับ Vercel เชื่อมคลังผลงานของ **หจก.เดคคอร์เรชั่น ไลน์ 2009** โดยอัตโนมัติผ่าน Google Drive API (Service Account) เก็บโฟลเดอร์ Drive ส่วนตัวเหมือนเดิม
 
-## สิ่งที่เปลี่ยนจากเวอร์ชันก่อน
+## ปัญหาที่แก้ใน V4
 
-- **แสดงทุกรูปในทุกโฟลเดอร์โครงการ** ไม่จำกัด 24/80 รูป และอ่านภาพจากโฟลเดอร์ย่อยด้วย (Google Drive API แบ่งหน้าผลลัพธ์จนครบ)
-- **สร้างโครงการบนเว็บไซต์อัตโนมัติ** เมื่อสร้างโฟลเดอร์ชั้นแรกใหม่ใต้ `Decoration line 2009` โดยไม่ต้องแก้ `projects.json`
-- **อัปเดตชื่อโครงการ/รูปที่เพิ่ม/รูปที่ลบ** จาก Google Drive หลังแคชหมดอายุ เริ่มต้น 300 วินาที (5 นาที) **เมื่อมีผู้เข้าชมเว็บไซต์** ไม่ต้อง Redeploy
-- รองรับ JPEG/PNG/WebP/GIF/AVIF และ HEIC/HEIF ตามความสามารถ Google Drive thumbnail และไลบรารีแปลงภาพ
-- รูปทั้งหมดโหลดผ่าน API server-side `/api/drive-image/...`; ไม่เปิดเผย Service Account credentials ให้ผู้ชม
-- หน้าโครงการแสดงได้ทั้งหมด แต่ทยอยโหลดชุดละ 36 รูปเพื่อไม่ให้เบราว์เซอร์ช้า
-- โปรเจกต์เก่าใช้ slug เดิม โฟลเดอร์ใหม่ได้ slug ใหม่โดยอัตโนมัติ
+1. **เลิกแสดงรูปสำรอง 25 รูปแบบเงียบ ๆ** หาก Vercel ไม่ได้ตั้งค่าเชื่อมต่อ Drive เว็บไซต์แจ้งข้อผิดพลาดแทน นี่เป็นสาเหตุหลักที่ทำให้จำนวนรูปในเว็บไม่เท่ากับ Drive แม้ V3 อ้างว่าซิงก์อัตโนมัติ
+2. **ทุกภาพปรากฏในหน้าโครงการโดยไม่ต้องกดดูเพิ่มเติม** หน้าโครงการใช้รูปทั้งหมดที่ Drive API ส่งมา และใช้ `loading="lazy"` ให้โหลดไฟล์ภาพเมื่อเลื่อนหน้าจอ
+3. **อ่านทุกหน้า pagination ของ Google Drive API** ด้วย `nextPageToken`, `pageSize=1000` และอ่านโฟลเดอร์ย่อยซ้ำลงไปจนสุดโดยไม่มีขีดจำกัดต่อโครงการ หาก Drive แจ้ง incompleteSearch จะไม่โชว์จำนวนที่ผิดโดยเงียบ ๆ
+4. **แก้ HEIC** ลอง thumbnail จาก Google ก่อน ถ้าไม่ได้ให้ลองภาพต้นฉบับผ่าน `sharp` และ `heic-convert` (`npm install` จะติดตั้งให้อัตโนมัติ) ไฟล์ที่เสียหาย/ไม่มีสิทธิ์อ่านจะแสดงแผ่นแจ้งข้อผิดพลาด **ไม่หายไปเฉย ๆ**
+5. **ปิด Next image optimizer ซ้อน**: ภาพจาก Drive แปลงเป็น WebP โดย route `/api/drive-image/[id]` อยู่แล้ว จึงลดจุดที่อาจเกิด cache ภาพเสีย
+6. **หน้า `/drive-status`** ตรวจจำนวนรูปและวิดีโอในแต่ละโครงการจากมุมมองของ Service Account บน Vercel พร้อมระบุจำนวน HEIC และไฟล์ HEIC ที่น่าสงสัย (เล็กกว่า 1 KB) แยกต่างหาก
+7. **มีโปรเจกต์ใหม่โดยอัตโนมัติ** เมื่อสร้างโฟลเดอร์ภายใต้ `Decoration line 2009` และเพิ่มรูปใหม่เมื่อแคชหมดอายุ (ค่าเริ่มต้น 5 นาที จากนั้น refresh หน้า) **ไม่ต้อง redeploy**
+8. ยังคงเบอร์ **0634219781**, อีเมล **decorationline2009@gmail.com**, QR LINE OA และลิงก์ **https://lin.ee/hW55akw** เหมือนเวอร์ชันก่อนหน้า
 
-**สำคัญมาก:** โฟลเดอร์ใหม่/รูปใหม่ทุกชิ้นภายใต้โฟลเดอร์หลักจะพร้อมถูกนำไปแสดงแก่สาธารณะโดยอัตโนมัติ แม้ใน Google Drive ต้นฉบับจะยัง private ควรใช้โฟลเดอร์งานที่ผ่านการอนุมัติให้นำขึ้นเว็บเท่านั้นและมีสิทธิ์เผยแพร่ภาพผลงาน/โลโก้ลูกค้า
+## ตั้งค่าบน Vercel (จำเป็น เพื่อให้รูปครบ!)
 
-## วิธี Deploy บน Vercel
+1. Google Cloud Console → เลือกหรือสร้าง Cloud Project → Enable **Google Drive API**
+2. สร้าง **Service Account** → Keys → Add Key → Create new key → JSON
+3. เปิด Google Drive → โฟลเดอร์ `Decoration line 2009` → Share → ใส่ `client_email` ของ Service Account เป็น **Viewer** (ตรวจสิทธิ์ไฟล์ภายในด้วย)
+4. Vercel → Project → Settings → Environment Variables → เพิ่ม:
 
-1. แตกไฟล์ ZIP และอัปโหลดไฟล์ใน `decoration-line-nextjs/` เข้า repository บน GitHub (ให้ `package.json` อยู่ที่ root)
-2. สร้าง/เลือก Google Cloud Project แล้ว **Enable Google Drive API**
-3. สร้าง **Service Account** ใน Google Cloud Console และสร้าง JSON key สำหรับการยืนยันตัวตน
-4. เปิดโฟลเดอร์ Google Drive ชื่อ `Decoration line 2009` → Share → เพิ่มอีเมลของ Service Account ด้วยสิทธิ์ **Viewer** (ไฟล์และโฟลเดอร์ภายในต้องเข้าถึงได้ด้วย)
-5. ไปที่ Vercel → Project → Settings → Environment Variables เพิ่มค่าดังนี้:
-
-| Environment Variable | ค่า |
+| Name | Value |
 |---|---|
 | `DRIVE_ROOT_FOLDER_ID` | `1awl7cpeVZ3drq3KHL-5vd9DC3X2v2S98` |
-| `GOOGLE_CLIENT_EMAIL` | ค่า `client_email` ใน JSON key |
-| `GOOGLE_PRIVATE_KEY` | ค่า `private_key` ใน JSON key (รวม `-----BEGIN PRIVATE KEY-----`, `\\n`, และ END) |
-| `DRIVE_REFRESH_SECONDS` | `300` (เลือกได้ตั้งแต่ 60 วินาทีขึ้นไป) |
+| `GOOGLE_SERVICE_ACCOUNT_JSON` | **เนื้อหาไฟล์ JSON key ทั้งก้อน** (เก็บเป็น Secret) |
+| `DRIVE_REFRESH_SECONDS` | `300` (หรือ `60` หากต้องการรีเฟรชถี่ขึ้น) |
 
-หรือใช้ตัวแปร **`GOOGLE_SERVICE_ACCOUNT_JSON`** ใส่ JSON credential ทั้งก้อนแทน email/key สองตัว ก็ได้ (ง่ายกว่าเวลาคัดลอกจาก JSON)
+ทางเลือก: ถ้าไม่ใช้ `GOOGLE_SERVICE_ACCOUNT_JSON` สามารถตั้ง `GOOGLE_CLIENT_EMAIL` + `GOOGLE_PRIVATE_KEY` แทน (ดู `.env.example`)
 
-**ห้าม** ใส่ Service Account key ใน repo, `public/`, หรือในตัวแปรที่ขึ้นต้นด้วย `NEXT_PUBLIC_` และไม่ควรแชร์ key กับบุคคลอื่น
+5. อัปโหลด source code ไป GitHub แล้ว Import เข้า Vercel (ให้ `package.json` อยู่ที่ repository root)
+6. หลังเพิ่มหรือเปลี่ยน Environment Variables ต้อง **Redeploy** หนึ่งครั้ง เพื่อให้ Deployment ใหม่รับค่าที่ตั้งไว้
+7. เข้าเว็บไซต์ `https://<your-domain>/drive-status` **ก่อน** ตรวจว่าระบบเชื่อมต่อและนับรูปได้ หากหน้าเว็บแจ้งว่าไม่ได้ตั้งค่า Service Account แปลว่ายังไม่ได้เชื่อม Drive บน Vercel จริง
 
-6. Import Repository ที่ <https://vercel.com/new> → Next.js → Deploy
-7. หลัง Deploy ให้เปิดเว็บไซต์ โฟลเดอร์ที่ระบบเห็นจะมาจาก Drive และเมื่อสร้างโฟลเดอร์ใหม่ก็จะแสดงเองภายหลังโดยไม่ต้อง Deploy เพิ่ม
+**หมายเหตุ:** การเชื่อม Drive ใน ChatGPT ไม่ได้ให้สิทธิ์ Vercel โดยอัตโนมัติ, V4 ไม่ฝัง key ลงใน source, และไม่เปิด Drive เป็นสาธารณะโดยตรง
 
-**ข้อแตกต่างจากเดิม:** ไม่ต้องตั้ง `DRIVE_SYNC_ON_BUILD` แล้ว และสคริปต์ซิงก์ตอน build รุ่นเก่าถูกถอดออก โค้ดใหม่ทำงานเมื่อเว็บไซต์ถูกเรียกใช้งานจริง (Server-side)
+## ตรวจว่ารูปครบไหม
 
-## รูปภาพ HEIC จาก iPhone
-
-- ใช้ Google Drive `thumbnailLink` ที่สั่งโหลดผ่านเซิร์ฟเวอร์ด้วยสิทธิ์ Service Account เท่านั้น; ไม่ใช้ลิงก์รูปส่วนตัวตรงบนหน้าเว็บ
-- รูป JPG/PNG/WebP จะถูกแปลงเป็น WebP เมื่อมีคนเรียกดู ช่วยลดขนาดไฟล์
-- ไฟล์ HEIC/HEIF บางไฟล์อาจไม่มี thumbnail ให้ Google Drive หรือเสียหาย; หากยังไม่แสดง ต้องแปลงไฟล์นั้นเป็น JPEG/PNG แล้วอัปโหลดเข้าโฟลเดอร์โครงการอีกครั้ง
-- ไฟล์ต้นฉบับขนาดใหญ่มากอาจใช้ภาพ thumbnail เพื่อรองรับข้อจำกัดของ Vercel Functions
-
-## รายละเอียดการทำงาน
-
-```text
-Google Drive (private, Service Account Viewer)
-└── Decoration line 2009              ← DRIVE_ROOT_FOLDER_ID
-    ├── Swensen_s                      ← 1 project
-    │   ├── IMG_1402.JPG
-    │   └── ... รูปทุกไฟล์
-    ├── Mantana km7                    ← 1 project
-    │   └── (โฟลเดอร์ย่อยก็ได้)
-    └── โครงการที่เพิ่งสร้าง           ← เว็บเพิ่มรายการให้อัตโนมัติ
-
-Visitor → Vercel Next.js server → Google Drive API → /api/drive-image/[id]
-                    ↳ cache folder/image listing 300 วินาที
-```
-
-- ใช้ `next/cache` สำหรับแคชข้อมูลรายชื่อโฟลเดอร์และรายชื่อรูปแยกตามโครงการ
-- Google Drive API `files.list` ดึงทุก page ด้วย `nextPageToken` จึงไม่มี hard cap 24 ภาพ
-- สถานะหน้าเว็บจะรีเฟรชเมื่อมี request ภายหลังข้อมูลแคชหมดอายุ; **ไม่ใช่ Push สดทันที** และเบราว์เซอร์ที่เปิดค้างต้อง Refresh หน้า
-- โปรเจกต์ใหม่ได้หมวดหมู่จากชื่อโฟลเดอร์แบบประมาณเบื้องต้น ปรับ regex ได้ที่ `src/lib/drive.ts`
-- **โฟลเดอร์เปล่าก็ปรากฏเป็นโปรเจกต์** พร้อมข้อความยังไม่มีรูปภาพ
-- ป้องกันการเข้าถึง Drive file id อื่น: API ตรวจรูปนั้นอยู่ในโฟลเดอร์โครงการที่ระบบค้นจาก root ก่อนทุกครั้ง
-- ถ้าไม่ตั้งค่า Google credentials เว็บไซต์ยังใช้รูปตัวอย่างเดิม 25 ภาพจากเวอร์ชัน 1.0 แต่ **จะไม่ซิงก์** และไม่เพิ่มโครงการใหม่
-- ถ้าตั้ง credential ไม่ถูกต้อง ระบบจะแจ้งข้อผิดพลาดแทนการแอบใช้ข้อมูลเก่าเพื่อไม่ให้เข้าใจผิดว่าซิงก์สำเร็จ
+- เปิด `/drive-status` → ดูจำนวนไฟล์ภาพในแต่ละโครงการ (นับได้เฉพาะไฟล์ที่ Service Account มีสิทธิ์เห็น)
+- เปิดหน้าโครงการและเลื่อนจนสุด: ภาพทั้งหมดอยู่ใน DOM แล้ว ใช้ browser lazy loading เพื่อประหยัดดาต้า ไม่ต้องกดปุ่ม "ดูภาพเพิ่มเติม"
+- ถ้าจำนวน **น้อยกว่าใน Google Drive**: เช็ก Service Account access, โฟลเดอร์ย่อย, สิทธิ์แชร์, cache 300 วินาที และเปิด Vercel Functions Logs
+- ถ้า **จำนวนตรงกันแต่ภาพไม่ขึ้น**: เป็นปัญหาดึง bytes/แปลงภาพ/HEIC; ดูสถานะ HTTP ของ `/api/drive-image/[id]` ใน browser Network และ Vercel Functions Logs
+- นับ **รูปภาพ** แยกจาก **วิดีโอ**, ตัวอย่าง Boulevard Signature Westgate มีรูป 16 ไฟล์และวิดีโอ 4 ไฟล์ ดังนั้นจำนวนรูปบนหน้าเว็บจึงควรเป็น 16 ไม่ใช่ 20
+- **พบตัวอย่างไฟล์ใน Mantana km7 และบ้านกลางเมืองบางไฟล์ขนาดเพียง 135 ไบต์และขึ้นต้น `bplist00`** ซึ่งไม่ใช่รูป HEIC สมบูรณ์ ต้องอัปโหลดภาพต้นฉบับใหม่ (ตัวอย่าง IMG_7286.HEIC มีขนาด ~1.8 MB และไม่เข้ากรณีนี้)
+- รูป HEIC จาก iPhone อาจเป็นไฟล์ผิดรูปแบบ/ไม่มี thumbnail/ใหญ่เกินข้อจำกัดของ Vercel; ถ้าแปลงไม่สำเร็จ ระบบจะแสดงช่องแจ้งเตือน แนะนำแปลงต้นฉบับเป็น JPEG หรือ WebP แล้วแทนไฟล์นั้นใน Drive
+- เมื่อสร้างโฟลเดอร์ใหม่จะเพิ่มเป็นโครงการใหม่โดยอัตโนมัติ; สิ่งนี้หมายความว่า **ต้องไม่เก็บไฟล์ลับ** ไว้ในโฟลเดอร์หลักดังกล่าว
 
 ## ทดสอบในเครื่อง
 
-Node.js 22+ (เหมาะกับ Next.js 16)
+ต้องมี Node.js 22 หรือใหม่กว่า:
 
 ```bash
 npm install
 cp .env.example .env.local
-# แก้ .env.local ใส่ credentials (ไม่ควรแชร์ไฟล์นี้)
-npm run dev
-# เปิด http://localhost:3000
+# ใส่ GOOGLE_SERVICE_ACCOUNT_JSON หรือ EMAIL + KEY ใน .env.local
 npm run check:content
 npm run typecheck
 npm run build
+npm run dev
+# http://localhost:3000/drive-status
 ```
 
-## ข้อมูลติดต่อบริษัท
+## ความปลอดภัยและข้อจำกัด
 
-หมายเลขโทรศัพท์, อีเมล และ LINE OA กำหนดเป็นค่าเริ่มต้นในโปรเจกต์แล้ว; การตั้งค่าบน Vercel เป็นเพียงตัวเลือกเมื่อต้องการเปลี่ยนข้อมูล:
-
-```env
-NEXT_PUBLIC_CONTACT_PHONE=0634219781
-NEXT_PUBLIC_LINE_URL=https://lin.ee/hW55akw
-NEXT_PUBLIC_CONTACT_EMAIL=decorationline2009@gmail.com
-NEXT_PUBLIC_COMPANY_ADDRESS=
-NEXT_PUBLIC_SITE_URL=https://your-real-domain.example
-```
-
-QR Code อยู่ที่ `public/line-oa-qr.png` และแสดงในส่วน CONTACT
-
-## ข้อจำกัดที่ควรทราบ
-
-- รูปภาพจำนวนมากอาจเพิ่มค่าใช้จ่าย/การใช้โควตา Google Drive API และ Vercel image optimization
-- เว็บต้องมี Service Account อ่านได้จริงเมื่อ Deploy; การเชื่อม Google Drive ของ ChatGPT เพียงอย่างเดียว **ไม่ทำให้ Vercel เข้าถึงได้**
-- ห้ามใส่ไฟล์เอกสารลูกค้า/ผังอาคารที่เป็นความลับในโฟลเดอร์ที่เผยแพร่อัตโนมัติ
-- ไม่ได้สร้าง webhook จาก Drive (ผู้ใช้ไม่ต้องตั้ง webhook; ระบบค้นการเปลี่ยนแปลงหลังเวลา cache)
-- โค้ดพร้อมนำไปติดตั้งและ deploy แต่ไม่ได้รัน `npm run build` ในสภาพแวดล้อมนี้ เนื่องจาก npm registry ไม่สามารถเชื่อมต่อได้
-
-## เวอร์ชัน 3.0: เพิ่มข้อมูลติดต่อและ LINE OA
-
-- ใส่หมายเลขโทรศัพท์ **0634219781** เป็นลิงก์โทรออก (`tel:`)
-- ใส่อีเมล **decorationline2009@gmail.com** เป็นลิงก์ส่งอีเมล (`mailto:`)
-- เพิ่ม QR Code ของ LINE OA จากภาพที่บริษัทส่งมาไว้ที่ `public/line-oa-qr.png`
-- ตรวจอ่านข้อมูลจาก QR ต้นฉบับได้ลิงก์ LINE OA **https://lin.ee/hW55akw** และใช้เป็นลิงก์สำหรับกดเพิ่มเพื่อนจากโทรศัพท์
-- แสดงข้อมูลติดต่อที่ส่วน Contact หน้าแรกและส่วนท้ายเว็บไซต์ทุกหน้า
-- ข้อมูลทั้งสามมีค่า default ในโค้ดอยู่แล้ว ไม่จำเป็นต้องตั้งค่า Environment Variables สำหรับสามค่านี้บน Vercel ถ้าต้องการใช้ค่าเดิม
-- ถ้าเคยตั้ง `NEXT_PUBLIC_CONTACT_PHONE`, `NEXT_PUBLIC_CONTACT_EMAIL`, `NEXT_PUBLIC_LINE_URL` บน Vercel ไว้ ค่าบน Vercel จะมีลำดับความสำคัญเหนือค่าเริ่มต้น ควรตรวจว่าเป็นค่าล่าสุด
-- การอ่านโครงการอัตโนมัติจาก Google Drive ยังคงใช้กลไกเดิมของ V2 (ต้องกำหนด Service Account เพื่อเปิดใช้งาน)
-- ลิงก์ LINE มาจากภาพ QR ที่ได้รับ; ก่อนเปิดเว็บจริงควรสแกน QR อีกครั้งเพื่อยืนยันว่าชี้ไปบัญชีของบริษัท
+- อย่าคอมมิต `.env.local` หรือ JSON key ขึ้น GitHub; **อย่า** ใส่ secret ในตัวแปร `NEXT_PUBLIC_`
+- Gallery จะเผยแพร่ไฟล์รูปที่ Service Account เห็นในโฟลเดอร์ผลงานให้ผู้เข้าชมเว็บได้ จึงต้องจัดสิทธิ์และคัดเฉพาะรูปที่ได้รับอนุญาต
+- Drive query ยังเป็นวิธีการ refresh แบบ polling ตาม cache และคำขอผู้ชม ไม่ใช่ notification push สด ๆ ต้อง refresh หน้าเว็บหลังอัปโหลดใหม่
+- ไม่ได้ทดสอบ Google Drive API บน Vercel หรือ production build ด้วย credentials ของผู้ใช้ในสภาพแวดล้อมสร้าง ZIP นี้ ผู้ดูแลเว็บต้องตรวจจาก `/drive-status` หลัง Deploy

@@ -6,11 +6,9 @@
 import 'server-only';
 import { createHash, createSign } from 'node:crypto';
 import { unstable_cache } from 'next/cache';
-import baseProjects from '@/data/projects.json';
 import type { Category, Project, PublicProject } from '@/lib/types';
 
 const folderMime = 'application/vnd.google-apps.folder';
-const base = baseProjects as Project[];
 const refreshSeconds = Math.max(60, Number(process.env.DRIVE_REFRESH_SECONDS || 300) || 300);
 const rootFolderId = process.env.DRIVE_ROOT_FOLDER_ID?.trim() || '1awl7cpeVZ3drq3KHL-5vd9DC3X2v2S98';
 export const driveConfigured = Boolean(
@@ -25,6 +23,7 @@ type DriveFile = {
   size?: string;
 };
 export type DrivePhoto = { id: string; name: string; mimeType: string; modifiedTime?: string };
+export type DriveMedia = { photos: DrivePhoto[]; videos: number; heicPhotos: number; suspectHeicFiles: number; otherFiles: number; nestedFolders: number; totalFiles: number };
 
 let bearer: { token: string; validUntil: number } | undefined;
 function credentials() {
@@ -71,23 +70,45 @@ export async function driveFetch(url: string) {
 async function listChildren(parent: string): Promise<DriveFile[]> {
   const files: DriveFile[] = [];
   let pageToken: string | undefined;
+  const seenPages = new Set<string>();
   do {
     const query = new URLSearchParams({
       q: `'${parent.replace(/'/g, "\\'")}' in parents and trashed = false`,
-      fields: 'nextPageToken,files(id,name,mimeType,modifiedTime,size)',
+      fields: 'nextPageToken,incompleteSearch,files(id,name,mimeType,modifiedTime,size)',
       pageSize: '1000', orderBy: 'name',
       supportsAllDrives: 'true', includeItemsFromAllDrives: 'true',
     });
     if (pageToken) query.set('pageToken', pageToken);
     const data = await (await driveFetch(`https://www.googleapis.com/drive/v3/files?${query}`)).json();
+    if (data.incompleteSearch) throw new Error('Google Drive returned incompleteSearch=true; refusing partial gallery');
     files.push(...(data.files || []));
+    if (data.nextPageToken && seenPages.has(data.nextPageToken)) throw new Error('Repeated Google Drive page token; refusing partial gallery');
+    if (data.nextPageToken) seenPages.add(data.nextPageToken);
     pageToken = data.nextPageToken || undefined;
   } while (pageToken);
   return files;
 }
 function projectId(_name: string, id: string) {
-  // Folder IDs do not change on rename, so a newly generated URL stays stable.
-  return `project-${createHash('sha256').update(id).digest('hex').slice(0, 12)}`;
+  // Existing V3 project URLs remain working; new folders get stable identifiers.
+  const stableExisting: Record<string, string> = {
+    '15XDz9miUOCAHNUaU8P2sYIvPQCmuV3eh': 'panana-sai3',
+    '11H20konV9pq4uazczkprlyJ_tHILjuPt': 'swensens',
+    '1piS48hoRID9HYYZKevsWyiLbCnSNC_Mg': 'ban-klang-mueang',
+    '1zVM9zbJAkSi7EvXGdvBa5cPCvwBFsbWc': 'sunseed',
+    '17CtXTHqO_J4dw0Ta5bb8UnIzf7AGzmuP': 'mantana-km7',
+    '15ADFYHWpkbDFIIZbSyCOU1Sxz_I97tGW': 'wind-ratchayothin',
+    '1eyRte7a0sERbrbY2bOWECqsB5r4qqttJ': 'highlight',
+    '1JB28RHWh8NYyMs_O8zA-YdpV90wfm5Ym': 'laoyuan',
+    '1ojuJHuhayLSfYPdRtmixASy9_xgubwcq': 'boulevard-westgate',
+    '1ParEeoRsrUWWlUNI7EkFJmfTZhw6Q5Wa': 'exterior',
+    '1G4alGzqOHlTmAtWlIAWTh_oRP7leMf_m': 'boulevard-rama5',
+    '1pGgmjpPbqpdNdAPZIsI49pcWggCilznz': 'grandio-bangna',
+    '1vR-G6b_Dp55yze9MpRhNHpsFlRnnTkvY': 'jiancha-rama3',
+    '1IIrYImgltFFQ9h_efHxTCUWEUUrcXp4R': 'jiancha-g-tower',
+    '1qU2-Dx4Qt4c7rvezYquH3EYhS3xwIc_X': 'jiancha-icon',
+    '18SFbwbnCcmxWmhBYNb8CGsIXMkz8QcBr': 'intercontinental-chiangmai',
+  };
+  return stableExisting[id] || `project-${createHash('sha256').update(id).digest('hex').slice(0, 12)}`;
 }
 function categoryFromName(name: string): Category {
   const n = name.toLowerCase();
@@ -108,17 +129,15 @@ function photoUrl(p: DrivePhoto, slug: string) {
 
 async function readProjectsFromDrive(): Promise<Project[]> {
   const top = await listChildren(rootFolderId);
-  const known = new Map(base.map(p => [p.folderId, p]));
   const ids = new Set<string>();
   return top.filter(f => f.mimeType === folderMime).map(f => {
-    const old = known.get(f.id);
-    const id = old?.id || projectId(f.name, f.id);
+    const id = projectId(f.name, f.id);
     if (ids.has(id)) throw new Error('Duplicate project slug: ' + id);
     ids.add(id);
     return {
       id,
       name: f.name, // Reflect folder renames without requiring redeployment.
-      category: old?.category || categoryFromName(f.name),
+      category: categoryFromName(f.name),
       folderId: f.id,
       photos: [], cover: '', available: false,
     };
@@ -127,18 +146,23 @@ async function readProjectsFromDrive(): Promise<Project[]> {
 const cachedProjects = unstable_cache(readProjectsFromDrive, ['dl2009-drive-project-folders'], { revalidate: refreshSeconds });
 
 export async function getProjects(): Promise<Project[]> {
-  if (!driveConfigured) return base;
+  if (!driveConfigured) throw new Error('Drive is not configured: add GOOGLE_SERVICE_ACCOUNT_JSON to Vercel environment variables');
   // Fail visibly if credentials are configured incorrectly, instead of silently
   // showing a static gallery that looks synchronized but isn't.
   return cachedProjects();
 }
 
-async function readPhotosFromDrive(folderId: string): Promise<DrivePhoto[]> {
+async function readMediaFromDrive(folderId: string): Promise<DriveMedia> {
   // Traverse photo subfolders too. No arbitrary 24/80 image truncation.
   // Folder depth has no arbitrary limit, but Google Drive cannot create cycles.
   const seenFolders = new Set<string>();
   const seenPhotos = new Set<string>();
   const photos: DrivePhoto[] = [];
+  let videos = 0;
+  let heicPhotos = 0;
+  let suspectHeicFiles = 0;
+  let otherFiles = 0;
+  let nestedFolders = 0;
   const queue = [folderId];
   while (queue.length) {
     const folder = queue.shift()!;
@@ -146,24 +170,33 @@ async function readPhotosFromDrive(folderId: string): Promise<DrivePhoto[]> {
     seenFolders.add(folder);
     const children = await listChildren(folder);
     for (const file of children) {
-      if (file.mimeType === folderMime) queue.push(file.id);
+      if (file.mimeType === folderMime) { queue.push(file.id); nestedFolders++; }
       else if (isPhoto(file) && !seenPhotos.has(file.id)) {
         seenPhotos.add(file.id);
+        if (/heic|heif/i.test(file.mimeType) || /\.(?:heic|heif)$/i.test(file.name)) {
+          heicPhotos++;
+          if (file.size && Number(file.size) < 1024) suspectHeicFiles++;
+        }
         photos.push({ id: file.id, name: file.name, mimeType: file.mimeType, modifiedTime: file.modifiedTime });
-      }
+      } else if (file.mimeType.startsWith('video/')) { videos++; }
+      else { otherFiles++; }
     }
   }
-  return photos;
+  return { photos, videos, heicPhotos, suspectHeicFiles, otherFiles, nestedFolders, totalFiles: photos.length + videos + otherFiles }; 
 }
 // Stable function wrapper: project folder ID is a cache key, not a secret.
-const cachedPhotos = unstable_cache(readPhotosFromDrive, ['dl2009-all-drive-photos'], { revalidate: refreshSeconds });
+const cachedMedia = unstable_cache(readMediaFromDrive, ['dl2009-all-drive-media-v4'], { revalidate: refreshSeconds });
+export async function getMedia(project: Project): Promise<DriveMedia> {
+  if (!driveConfigured) throw new Error('Drive is not configured');
+  return cachedMedia(project.folderId);
+}
 export async function getPhotos(project: Project): Promise<DrivePhoto[]> {
-  if (!driveConfigured) return [];
-  return cachedPhotos(project.folderId);
+  return (await getMedia(project)).photos;
 }
 export async function getProjectsWithPhotos(): Promise<PublicProject[]> {
   const all = await getProjects();
-  if (!driveConfigured) return all.map(({ folderId: _id, ...p }) => p);
+  // Never silently return the 25 demo photos from the V3 bundle. If Drive is
+  // unavailable, the caller renders an explicit warning instead of fake counts.
   // Limit concurrent Drive calls to keep API quotas and Vercel compute predictable.
   const output: PublicProject[] = [];
   for (let i = 0; i < all.length; i += 5) {
@@ -181,7 +214,7 @@ export async function getProjectsWithPhotos(): Promise<PublicProject[]> {
 export async function getProjectWithPhotos(slug: string): Promise<PublicProject | undefined> {
   const project = (await getProjects()).find(p => p.id === slug);
   if (!project) return undefined;
-  if (!driveConfigured) { const { folderId: _id, ...p } = project; return p; }
+  if (!driveConfigured) return undefined;
   const images = await getPhotos(project);
   const photos = images.map(img => photoUrl(img, project.id));
   const preferred = images.find(img => !/^logo[. _-]/i.test(img.name)) || images[0];

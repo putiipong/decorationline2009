@@ -20,6 +20,7 @@ export default function SiteFooter() {
         </div>
         <div className="footer-right">
           <Link href="/#top">กลับขึ้นด้านบน ↑</Link>
+          <Link href="/drive-status">ตรวจสอบรูป Google Drive ↗</Link>
           <small>ภาพผลงานจากคลังโครงการของบริษัท</small>
         </div>
       </div>

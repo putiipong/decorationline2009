@@ -15,7 +15,6 @@ export const metadata: Metadata = {
     description: 'แกลเลอรีผลงานโครงการของ หจก. เดคคอร์เรชั่น ไลน์ 2009',
     locale: 'th_TH',
     type: 'website',
-    images: [{ url: '/assets/boulevard-rama5-1.webp', alt: 'Decoration Line 2009' }],
   },
 };
 export const viewport: Viewport = { themeColor: '#192220', width: 'device-width', initialScale: 1 };

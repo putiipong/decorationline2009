@@ -30,3 +30,21 @@
 @media(max-width:1100px){.contact-line{grid-template-columns:145px minmax(0,1fr);gap:18px}}
 @media(max-width:760px){.contact-line{grid-template-columns:152px minmax(0,1fr);gap:20px}.footer-contact-links{max-width:350px}}
 @media(max-width:470px){.contact-line{grid-template-columns:1fr;justify-items:start}.contact-qr{width:190px;max-width:100%}.contact-line-copy{width:100%}.contact-placeholder{flex-direction:column;gap:5px}.contact-placeholder a{max-width:100%}}
+
+/* Google Drive V4: explicit operational states */
+.drive-alert { background: #fff5db; color: #533d13; padding: 16px 22px; border: 1px solid #e9cd91; border-radius: 12px; margin-top: 22px; line-height: 1.7; }
+.drive-alert strong { display: block; font-size: 1rem; margin-bottom: 4px; }
+.drive-alert a { text-decoration: underline; font-weight: 600; }
+.drive-image-error { background:#f1ede8; color:#6b5c51; padding:30px 12px; min-height:220px; display:flex; align-items:center; justify-content:center; text-align:center; flex-direction:column; border:1px dashed #cdbeb1; }
+.drive-status-page { min-height:72vh; padding-top: 90px; padding-bottom: 70px; }
+.drive-status-page h1 { font-size:clamp(2rem,4vw,3.2rem); margin:14px 0; }
+.drive-status-page table { width:100%; border-collapse:collapse; margin-top:26px; text-align:left; }
+.drive-status-page th,.drive-status-page td { padding:12px 10px; border-bottom:1px solid #ddd; }
+.drive-status-page th { font-size:.85rem; letter-spacing:.02em; }
+.drive-status-page p { line-height:1.7; }
+.drive-status-page .state-ok { color:#267246; font-weight:700; }
+.drive-status-page .state-error { color:#9f351f; font-weight:700; }
+.project-gallery-photo img { width:100%; height:auto; display:block; }
+
+.drive-hero-placeholder {width:100%;height:100%;min-height:420px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:#303b33;color:#e6ebe3;font-size:clamp(20px,2.5vw,30px);letter-spacing:.12em;gap:12px;}
+.drive-hero-placeholder small{font-size:12px;letter-spacing:normal;}

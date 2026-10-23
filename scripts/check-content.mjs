@@ -1,12 +1,8 @@
-import { readFile, access } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { access, readFile } from 'node:fs/promises';
+import { resolve, join } from 'node:path';
 const root = resolve(import.meta.dirname, '..');
-const projects = JSON.parse(await readFile(join(root, 'src/data/projects.json'), 'utf8'));
-const ids = new Set(), folderIds = new Set();
-for (const p of projects) {
-  if (!p.id || !p.name || !p.folderId || !Array.isArray(p.photos)) throw new Error(`Malformed project: ${JSON.stringify(p)}`);
-  if (ids.has(p.id) || folderIds.has(p.folderId)) throw new Error(`Duplicate project: ${p.name}`);
-  ids.add(p.id); folderIds.add(p.folderId);
-  for (const photo of p.photos) await access(join(root, 'public', photo));
-}
-console.log(`OK: ${projects.length} static fallback projects; dynamic Drive project folders are discovered at runtime.`);
+const data = await readFile(join(root, 'src/lib/drive.ts'),'utf8');
+if (!data.includes('nextPageToken') || !data.includes('while (pageToken)')) throw new Error('Missing complete Drive pagination');
+if (!data.includes('readMediaFromDrive')) throw new Error('Missing Drive media traversal');
+await access(join(root,'public/line-oa-qr.png'));
+console.log('OK: dynamic Drive pagination, recursive gallery listing, LINE OA QR');

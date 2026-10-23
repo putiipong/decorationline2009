@@ -1,21 +1,23 @@
 'use client';
-import Image from 'next/image';
 import { useState } from 'react';
 
-const PAGE_SIZE = 36;
-
-/** Render every available photo on demand, without a 24-photo hard limit. */
+function Photo({ src, name, index, total }: { src: string; name: string; index: number; total: number }) {
+  const [failed, setFailed] = useState(false);
+  return <figure className="project-gallery-photo">
+    {failed ? <div className="drive-image-error" role="status">ไม่สามารถเปิดภาพที่ {index + 1} ได้<br /><small>ตรวจสอบไฟล์ต้นฉบับหรือหน้า Drive Status</small></div> :
+      // The image endpoint already returns an optimized, authenticated WebP.
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={src} alt={`โครงการ ${name} ภาพที่ ${index + 1}`} loading={index < 2 ? 'eager' : 'lazy'} decoding="async" onError={() => setFailed(true)} />}
+    <figcaption>{name} · {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}</figcaption>
+  </figure>;
+}
+/** All images are in the page; browser native lazy loading fetches them on scroll.
+ * No Show More button hides the remaining files. */
 export default function ProjectDetailGallery({ name, photos }: { name: string; photos: string[] }) {
-  const [show, setShow] = useState(PAGE_SIZE);
   return <>
-    <p className="gallery-total">ภาพทั้งหมด {photos.length} ภาพ — เลื่อนเพื่อชมผลงาน</p>
-    <div className="detail-gallery">{photos.slice(0, show).map((photo, index) =>
-      <figure key={`${photo}-${index}`}><Image src={photo} alt={`โครงการ ${name} ภาพที่ ${index + 1}`}
-        width={1500} height={1000} sizes="(max-width: 750px) 100vw, 50vw" loading="lazy" />
-        <figcaption>{name} · {String(index + 1).padStart(2, '0')} / {String(photos.length).padStart(2, '0')}</figcaption></figure>
+    <p className="gallery-total">พบรูปจาก Google Drive ทั้งหมด {photos.length} ภาพ — ทุกภาพอยู่ในหน้านี้ (โหลดเมื่อเลื่อนถึง)</p>
+    <div className="detail-gallery">{photos.map((photo, index) =>
+      <Photo key={photo} src={photo} name={name} index={index} total={photos.length} />
     )}</div>
-    {show < photos.length && <div className="gallery-load-more"><button type="button" className="btn btn-dark" onClick={() => setShow(n => n + PAGE_SIZE)}>
-      ดูภาพเพิ่มเติม ({Math.min(PAGE_SIZE, photos.length - show)} ภาพ) ↓
-    </button><p>แสดง {Math.min(show, photos.length)} จาก {photos.length} ภาพ</p></div>}
   </>;
 }

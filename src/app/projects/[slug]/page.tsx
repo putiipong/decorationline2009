@@ -11,14 +11,19 @@ type Props = { params: Promise<{ slug: string }> };
 export const dynamic = 'force-dynamic'; // Automatically recognize new folders without a redeploy.
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const p = await getProjectWithPhotos(slug);
+  let p: Awaited<ReturnType<typeof getProjectWithPhotos>>;
+  try { p = await getProjectWithPhotos(slug); } catch { return {}; }
   if (!p) return {};
   return { title: p.name, description: `ภาพผลงานโครงการ ${p.name} — หจก. เดคคอร์เรชั่น ไลน์ 2009`,
     openGraph: p.cover ? { images: [{ url: p.cover }] } : undefined };
 }
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const project = await getProjectWithPhotos(slug);
+  let error = false;
+  let project: Awaited<ReturnType<typeof getProjectWithPhotos>>;
+  try { project = await getProjectWithPhotos(slug); }
+  catch (e) { error = true; console.error('Project Drive error', e); }
+  if (error) return <><SiteHeader /><main className="detail-page shell"><div className="drive-alert">ไม่สามารถเชื่อมต่อ Google Drive เพื่อโหลดรูปโครงการได้ โปรดตรวจสอบ <Link href="/drive-status">Drive Status</Link></div></main><SiteFooter /></>;
   if (!project) notFound();
   return <>
     <SiteHeader />

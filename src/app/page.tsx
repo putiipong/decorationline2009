@@ -9,12 +9,18 @@ import { getProjectsWithPhotos } from '@/lib/drive';
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  const projects = await getProjectsWithPhotos();
+  let driveError = false;
+  let projects: Awaited<ReturnType<typeof getProjectsWithPhotos>> = [];
+  try { projects = await getProjectsWithPhotos(); }
+  catch (error) { console.error('Google Drive gallery unavailable', error); driveError = true; }
   const featured = projects.find(p => p.cover) || projects[0];
   return <>
     <a className="skip-link" href="#works">ข้ามไปที่ผลงาน</a>
     <SiteHeader />
     <main>
+      {driveError && <div className="shell drive-alert" role="alert"><strong>เว็บไซต์ยังโหลดข้อมูลจาก Google Drive ไม่สำเร็จ</strong>
+        ระบบไม่แสดงรูปตัวอย่างเก่าแทนข้อมูลจริงเพื่อป้องกันความเข้าใจผิด ตรวจสอบการเชื่อมต่อและจำนวนรูปได้ที่{' '}
+        <Link href="/drive-status">หน้า Drive Status</Link></div>}
       <section className="hero"><div className="hero-grid shell">
         <div className="hero-copy">
           <p className="eyebrow"><span className="eyebrow-line" /> DECORATION LINE 2009</p>
@@ -25,9 +31,11 @@ export default async function HomePage() {
             <a className="text-link" href="#about">รู้จักเรา <span>→</span></a></div>
           <div className="hero-meta"><span>SELECTED WORKS</span><strong>{projects.length}</strong><span>PROJECT FOLDERS</span></div>
         </div>
-        <div className="hero-visual"><Image src={featured?.cover || "/assets/boulevard-rama5-1.webp"} alt={`ภาพผลงานตกแต่งจากโครงการ ${featured?.name || "Boulevard Rama 5"}`}
-          fill priority sizes="(max-width: 760px) 100vw, 52vw" />
-          <div className="hero-image-tag"><span>01 / FEATURED WORK</span><strong>{featured?.name || "BOULEVARD RAMA 5"}</strong></div></div>
+        <div className="hero-visual">{featured?.cover
+          ? <Image src={featured.cover} alt={`ภาพผลงานตกแต่งจากโครงการ ${featured.name}`}
+              fill priority sizes="(max-width: 760px) 100vw, 52vw" />
+          : <div className="drive-hero-placeholder">DECORATION LINE 2009<br /><small>กำลังรอการเชื่อมต่อ Google Drive</small></div>}
+          <div className="hero-image-tag"><span>01 / FEATURED WORK</span><strong>{featured?.name || "PORTFOLIO"}</strong></div></div>
       </div><div className="hero-side-label">DECORATION · INTERIOR · SPACES</div></section>
       <section className="intro shell" id="about"><div className="section-number">01 <span>—</span> ABOUT US</div>
         <div className="intro-body"><h2>เรื่องราวที่เล่าผ่าน<br /><span>รายละเอียดของพื้นที่</span></h2><div>
