@@ -1,40 +1,25 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import type { Metadata, Viewport } from 'next';
+import type { ReactNode } from 'react';
+import './globals.css';
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
 export const metadata: Metadata = {
-  title: "Decoration line 2009",
-  description: "Decoration line 2009",
+  metadataBase: new URL(siteUrl),
+  title: { default: 'Decoration Line 2009 | ผลงานตกแต่งและก่อสร้าง', template: '%s | Decoration Line 2009' },
+  description: 'ชมผลงานจากโครงการจริงของ หจก. เดคคอร์เรชั่น ไลน์ 2009 ทั้งบ้านพักอาศัย ร้านค้า และพื้นที่เชิงพาณิชย์',
+  applicationName: 'Decoration Line 2009',
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: 'Decoration Line 2009',
+    description: 'แกลเลอรีผลงานโครงการของ หจก. เดคคอร์เรชั่น ไลน์ 2009',
+    locale: 'th_TH',
+    type: 'website',
+    images: [{ url: '/assets/boulevard-rama5-1.webp', alt: 'Decoration Line 2009' }],
+  },
 };
+export const viewport: Viewport = { themeColor: '#192220', width: 'device-width', initialScale: 1 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <SpeedInsights/>
-        <Navbar/>
-        {children}
-        <hr />
-        <Footer/>
-      </body>
-    </html>
-  );
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return <html lang="th"><body>{children}</body></html>;
 }

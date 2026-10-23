@@ -1,14 +1,9 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  // i18n: {
-  //   locales: ["en", "th"],
-  //   defaultLocale: "en",
-  // },
-  images: {
-    domains: ['drive.google.com','images.*.com'],
-  },
-  /* config options here */
+  reactStrictMode: true,
+  // Private Google Drive originals are served via /api/drive-image as local URLs.
+  // Never expose Drive service account credentials to client code.
 };
 
 export default nextConfig;
