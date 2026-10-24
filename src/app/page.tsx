@@ -26,10 +26,10 @@ export default async function HomePage() {
           <p className="eyebrow"><span className="eyebrow-line" /> DECORATION LINE 2009</p>
           <h1>Spaces made<br /><em>to matter.</em></h1>
           <p className="hero-lead">ทุกพื้นที่มีเรื่องราวของตัวเอง</p>
-          <p className="hero-desc">รวมภาพผลงานจากโครงการจริง ทั้งพื้นที่พักอาศัย ร้านค้า และพื้นที่เชิงพาณิชย์ ถ่ายทอดรายละเอียดของแต่ละงานผ่านภาพถ่าย</p>
+          <p className="hero-desc">พื้นที่ที่ดีเริ่มจากความเข้าใจ ชมรายละเอียดและบรรยากาศจากผลงานตกแต่งจริงของเรา ทั้งบ้าน ร้านค้า และพื้นที่ธุรกิจ</p>
           <div className="hero-buttons"><a className="btn btn-dark" href="#works">ชมผลงานทั้งหมด <span>↗</span></a>
             <a className="text-link" href="#about">รู้จักเรา <span>→</span></a></div>
-          <div className="hero-meta"><span>SELECTED WORKS</span><strong>{projects.length}</strong><span>PROJECT FOLDERS</span></div>
+          <div className="hero-meta"><span>SELECTED WORKS</span><strong>{projects.length}</strong><span>PROJECTS</span></div>
         </div>
         <div className="hero-visual">{featured?.cover
           ? <Image src={featured.cover} alt={`ภาพผลงานตกแต่งจากโครงการ ${featured.name}`}
@@ -39,7 +39,7 @@ export default async function HomePage() {
       </div><div className="hero-side-label">DECORATION · INTERIOR · SPACES</div></section>
       <section className="intro shell" id="about"><div className="section-number">01 <span>—</span> ABOUT US</div>
         <div className="intro-body"><h2>เรื่องราวที่เล่าผ่าน<br /><span>รายละเอียดของพื้นที่</span></h2><div>
-          <p>หจก. เดคคอร์เรชั่น ไลน์ 2009</p><p className="muted">เว็บไซต์นี้รวบรวมผลงานจากโฟลเดอร์โครงการของบริษัท เพื่อให้สามารถเลือกชมลักษณะงานและรายละเอียดภาพได้สะดวกในที่เดียว</p>
+          <p>หจก. เดคคอร์เรชั่น ไลน์ 2009</p><p className="muted">จากพื้นที่พักอาศัยที่อบอุ่น สู่ร้านค้าและพื้นที่ธุรกิจที่มีเอกลักษณ์ ชมผลงานจริงของเรา แล้วค้นหาแรงบันดาลใจให้พื้นที่ของคุณ</p>
           <Link className="underlined" href="/#works">เลือกชมโครงการ <span>↗</span></Link>
         </div></div></section>
       <ProjectGallery projects={projects} />

@@ -59,8 +59,8 @@ export default function ProjectGallery({ projects }: { projects: PublicProject[]
   return <>
     <section className="portfolio" id="works"><div className="shell">
       <div className="section-number">02 <span>—</span> SELECTED PROJECTS</div>
-      <div className="section-head"><div><h2>ผลงาน<span>ของเรา</span></h2><p>เลือกดูผลงานตามประเภท หรือคลิกที่แต่ละโครงการเพื่อเปิดแกลเลอรีภาพทั้งหมด</p></div>
-        <div className="count-caption"><strong aria-live="polite">{list.length}</strong><span>โครงการ / หมวดผลงาน</span></div></div>
+      <div className="section-head"><div><h2>ผลงาน<span>ของเรา</span></h2><p>ค้นพบพื้นที่ในแบบที่คุณชอบ เลือกประเภทงานแล้วเปิดชมรายละเอียดในแต่ละโครงการ</p></div>
+        <div className="count-caption"><strong aria-live="polite">{list.length}</strong><span>โครงการที่เลือกชม</span></div></div>
       <div className="filter-bar" role="group" aria-label="กรองประเภทผลงาน">
         {filters.map(f => <button key={f.value} type="button" className={`filter ${filter === f.value ? 'active' : ''}`}
           aria-pressed={filter === f.value} onClick={() => setFilter(f.value)}>{f.label}</button>)}
@@ -71,7 +71,7 @@ export default function ProjectGallery({ projects }: { projects: PublicProject[]
             aria-label={p.photos.length ? `เปิดภาพผลงานโครงการ ${p.name}` : `${p.name} ยังไม่มีภาพที่พร้อมแสดง`}
             onClick={e => open(p, e.currentTarget)}>
             <span className="project-photo">
-              {p.cover ? <Image src={p.cover} alt={`ภาพผลงานโครงการ ${p.name}`} fill sizes="(max-width: 760px) 50vw, (max-width: 1200px) 50vw, 33vw" /> :
+              {p.cover ? <Image src={p.cover} alt={`ภาพผลงานโครงการ ${p.name}`} fill sizes="(max-width: 380px) 100vw, 50vw" /> :
                 <span className="photo-placeholder"><span>DL<span className="accent-dot">.</span></span><small>กำลังจัดเตรียมภาพ</small></span>}
               <span className="project-index">{String(i + 1).padStart(2, '0')}</span>
             </span>
@@ -80,7 +80,8 @@ export default function ProjectGallery({ projects }: { projects: PublicProject[]
           <Link className="project-detail-link" href={`/projects/${p.id}`}>ดูหน้าโครงการ ↗</Link>
         </div>)}
       </div>
-      <p className="portfolio-footnote">* ประเภทโครงการเป็นการจัดหมวดเบื้องต้นจากชื่อโฟลเดอร์ สามารถแก้ไขได้ก่อนเผยแพร่</p>
+      {list.length === 0 && <p className="gallery-empty">ยังไม่มีผลงานในหมวดนี้ ลองเลือกชมผลงานในหมวดอื่นได้เลย</p>}
+      <p className="portfolio-footnote">ทุกพื้นที่มีรายละเอียดให้ค้นพบ คลิกภาพเพื่อชมแกลเลอรี หรือเลือกดูหน้าโครงการ</p>
     </div></section>
     {selected && <div className="modal open" role="dialog" aria-modal="true" aria-labelledby="gallery-title">
       <button type="button" className="modal-backdrop" onClick={close} tabIndex={-1} aria-label="ปิดแกลเลอรี" />

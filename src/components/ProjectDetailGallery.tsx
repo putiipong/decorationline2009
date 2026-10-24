@@ -15,7 +15,7 @@ function Photo({ src, name, index, total }: { src: string; name: string; index: 
  * No Show More button hides the remaining files. */
 export default function ProjectDetailGallery({ name, photos }: { name: string; photos: string[] }) {
   return <>
-    <p className="gallery-total">พบรูปจาก Google Drive ทั้งหมด {photos.length} ภาพ — ทุกภาพอยู่ในหน้านี้ (โหลดเมื่อเลื่อนถึง)</p>
+    <p className="gallery-total">รายละเอียดและบรรยากาศของโครงการ · {photos.length} ภาพ</p>
     <div className="detail-gallery">{photos.map((photo, index) =>
       <Photo key={photo} src={photo} name={name} index={index} total={photos.length} />
     )}</div>
